@@ -1,4 +1,4 @@
-INSERT INTO departments (name)
+INSERT INTO departments (department)
 VALUES
 	("Sales"),
     ("Engineering"),
@@ -15,17 +15,24 @@ VALUES
     ("Legal Team Lead", 80000, 4),
     ("Lawyer", 65000, 4);
     
+INSERT INTO managers (manager)
+VALUES
+	("Ricardo Menendez"),
+    ("Samantha Greenspirit"),
+    ("Reese Tremble");
+        
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES
 	("Ricardo", "Menendez", 1, null),
     ("Jorge", "Bolivar", 2, 1),
     ("Jack", "Tennison", 2, 1),
     ("Samantha", "Greenspirit", 3, null),
-    ("Franz", "Holheim", 4, 4),
-    ("Rachel", "McMurtry", 4, 4),
+    ("Franz", "Holheim", 4, 2),
+    ("Rachel", "McMurtry", 4, 2),
     ("Corey", "Trumb", 5, null),
     ("Reese", "Treble", 6, null),
-    ("Kraig", "Luxembosh", 7, 8),
-    ("Tallyrand", "Bigsby", 7, 8);
+    ("Kraig", "Luxembosh", 7, 3),
+    ("Tallyrand", "Bigsby", 7, 3);
+    
     
     
