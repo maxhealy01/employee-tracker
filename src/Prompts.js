@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const cTable = require('console.table');
-const {viewAllDepartments, viewAllEmployees, viewAllRoles} = require('../db/database')
+const {viewAllDepartments, viewAllEmployees, viewAllRoles, addDepartment, addRole, addEmployee, updateRole} = require('../db/database')
 
 function Prompts() {
 
@@ -12,8 +12,7 @@ Prompts.prototype.initializeProgram = function() {
       type: 'list',
       name: 'choice',
       message: 'What would you like to do?',
-      choices: ['View All Employees', 'View All Departments', 'View All Roles', 'View Employees By Manager', 'View Employees By Department',
-              'Add Employee', 'Remove Employee', 'Update Employee Role', 'Update Employee Manager']
+      choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add Department', 'Add Role', 'Add Employee', 'Update Employee Role']
   }])
     .then(({choice}) => {
       switch (choice) {
@@ -32,16 +31,24 @@ Prompts.prototype.initializeProgram = function() {
           console.table(data)
           this.initializeProgram()});
           break;
-        case 'View Employees By Manager':
-          this.employeesByManager();
+        case 'Add Department':
+          this.addDepartmentQueries();
           break;
+        case 'Add Role':
+          this.addRoleQueries();
+          break;
+        case 'Add Employee':
+          this.addEmployeeQueries();
+          break;
+        case 'Update Employee Role':
+          this.updateRoleQueries();
       }
     })
 
   }
 
   // This function gets the prompts for View Employees by Manager
-Prompts.prototype.employeesByManager = function() {
+/*Prompts.prototype.employeesByManagerQueries = function() {
   inquirer
     .prompt([{
       type: 'text',
@@ -71,9 +78,182 @@ Prompts.prototype.employeesByManager = function() {
     }])
   // These prompts are then applied to the query.
     .then(({ first_name, last_name }) => {
-      console.log(first_name.trim(), last_name.trim())
+      viewEmployeesByManager(first_name, last_name)
+    })
+} */
+
+Prompts.prototype.addDepartmentQueries = function() {
+  inquirer
+    .prompt([{
+      type: 'text',
+      name: 'department',
+      message: "Enter the name of the new department.",
+      validate: nameInput => {
+        if (nameInput){
+          return true;
+        } else {
+          console.log("Please enter the name of the new department.");
+          return false;
+        }
+      }
+    }])
+  // These prompts are then applied to the query.
+    .then(({ department }) => {
+      console.table(addDepartment(department))
+      this.initializeProgram();
     })
 }
-//View all employees -- by manager, department; add employee, remove employee, update employee role, manager;
-// view all departments, view all roles
+
+Prompts.prototype.addRoleQueries = function() {
+  inquirer
+    .prompt([{
+      type: 'text',
+      name: 'role',
+      message: 'Enter the name of the new role.',
+      validate: nameInput => {
+        if (nameInput){
+          return true;
+        } else {
+          console.log("Please enter the name of the new role.");
+          return false;
+        }
+      }},
+      {
+        type: 'text',
+        name: 'salary',
+        message: 'Enter the salary of this role.',
+        validate: nameInput => {
+          if (typeof parseInt(nameInput) == 'number'){
+            return true;
+          } else {
+            console.log("Please enter the salary of the new role.");
+            return false;
+          }
+      }
+    },
+    {
+      type: 'text',
+      name: 'department',
+      message: "Enter the name of the role's department.",
+      validate: nameInput => {
+        if (nameInput){
+          return true;
+        } else {
+          console.log("Please enter the name of the new role.");
+          return false;
+        }
+      }
+    }])
+    .then(({ role, salary, department }) => {
+      console.table(addRole(role, salary, department))
+      this.initializeProgram();
+    })
+}
+
+Prompts.prototype.addEmployeeQueries = function() {
+  inquirer
+  .prompt([{
+    type: 'text',
+    name: 'firstName',
+    message: "Enter the new employee's first name.",
+    validate: nameInput => {
+      if (nameInput){
+        return true;
+      } else {
+        console.log("Please enter the new employee's first name.");
+        return false;
+      }
+    }},
+    {
+      type: 'text',
+      name: 'lastName',
+      message: "Enter the employee's last name.",
+      validate: nameInput => {
+        if (nameInput){
+          return true;
+        } else {
+          console.log("Please enter the new employee's last name.");
+          return false;
+        }
+      }
+  },
+  {
+    type: 'text',
+    name: 'role',
+    message: "Enter the new employee's role.",
+    validate: nameInput => {
+      if (nameInput){
+        return true;
+      } else {
+        console.log("Please enter the new employee's role.");
+        return false;
+      }
+    }
+  },
+  {
+    type: 'text',
+    name: 'manager',
+    message: "Enter the employee's manager.",
+    validate: nameInput => {
+      if (nameInput){
+        return true;
+      } else {
+        console.log("Please enter the new employee's role.");
+        return false;
+      }
+    }
+    
+
+  }])
+  .then(({ firstName, lastName, role, manager }) => {
+    console.table(addEmployee(firstName, lastName, role, manager))
+    this.initializeProgram();
+  })
+}
+
+Prompts.prototype.updateRoleQueries = function() {
+  inquirer
+  .prompt([{
+    type: 'text',
+    name: 'firstName',
+    message: "Enter the employee's first name.",
+    validate: nameInput => {
+      if (nameInput){
+        return true;
+      } else {
+        console.log("Please enter the employee's first name.");
+        return false;
+      }
+    }},
+    {
+      type: 'text',
+      name: 'lastName',
+      message: "Enter the employee's last name.",
+      validate: nameInput => {
+        if (nameInput){
+          return true;
+        } else {
+          console.log("Please enter the employee's last name.");
+          return false;
+        }
+      }
+  },
+  {
+    type: 'text',
+    name: 'role',
+    message: "Enter the employee's new role.",
+    validate: nameInput => {
+      if (nameInput){
+        return true;
+      } else {
+        console.log("Please enter the employee's new role.");
+        return false;
+      }
+    }
+  }])
+  .then(({ firstName, lastName, role }) => {
+    console.table(updateRole(firstName, lastName, role))
+    this.initializeProgram();
+  })
+}
 Prompts.prototype.initializeProgram();

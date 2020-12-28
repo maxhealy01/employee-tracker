@@ -8,7 +8,7 @@ const db = mysql.createConnection({
 });
 
 db.connect((err) => {
-  if (err) throw err;
+ // if (err) throw err;
   console.log('Connected to MySQL Server!');
 });
 
@@ -41,9 +41,46 @@ function viewAllDepartments(){
 
 function viewAllRoles(){
   let data = db.promise().query(
-    `SELECT * FROM roles`)
+    `SELECT roles.id, roles.title, departments.department, roles.salary
+    FROM roles
+    LEFT JOIN departments ON roles.department_id = departments.id`)
   return data;
 }
 
+function addDepartment(department){
+  let data = db.promise().query(
+    `INSERT INTO departments (department) VALUES (?)`,
+    department)
+  return data;
+}
 
-module.exports = {viewAllDepartments,viewAllEmployees, viewAllRoles}
+function addRole(role, salary, department){
+  let data = db.promise().query(
+    `INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)`,
+    role, salary, department)
+  return data
+}
+
+function addEmployee(firstName, lastName, role, manager){
+  console.log(firstName, lastName, role, manager)
+}
+
+function updateRole(firstName, lastName, role){
+  console.log(firstName, lastName, role)
+}
+// function viewEmployeesByManager(first_name, last_name){
+//   console.log(first_name, last_name)
+// }
+
+// add a department, add a role, add an employee, and update an employee role
+//View all employees -- by manager, department; add employee, remove employee, update employee role, manager;
+// view all departments, view all roles
+
+module.exports = {viewAllDepartments, 
+  viewAllEmployees, 
+  viewAllRoles,
+  addDepartment,
+  addRole,
+  addEmployee,
+  updateRole
+}
