@@ -1,8 +1,6 @@
 
 # Employee Tracker
 
-<img src = "https://img.shields.io/badge/License--red">
-
 ## Description
 
 This is a backend tool designed to help employers keep track of their employees' roles, salaries, and managers.
